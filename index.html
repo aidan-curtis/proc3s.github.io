@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Solving Long-Horizon Robotics Problems with LLMs and Constraint Satisfaction">
+  <meta name="keywords" content="VLM, LLM, TAMP, Planning, Constraints">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PROC3S</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src=""></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" type="image/png" href="./static/images/seal_icon.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+
+<body>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">Trust the PRoC3S: Solving Long-Horizon Robotics Problems with LLMs and Constraint Satisfaction</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://aidanreececurtis.com/">Aidan Curtis<sup>*</sup></a>,
+              </span>
+              <span class="author-block">
+                <a href="https://nishanthjkumar.com/">Nishanth Kumar<sup>*</sup></a>,
+              </span>
+              <span class="author-block">
+                <a href="https://www.linkedin.com/in/jjingcao">Jing Cao</a>,
+              </span>
+              <span class="author-block">
+                <a href="https://people.csail.mit.edu/tlp/">Tomás Lozano-Pérez</a>,
+              </span>
+              <span class="author-block">
+                <a href="https://people.csail.mit.edu/lpk/">Leslie Pack Kaelbling</a>
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">MIT CSAIL</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link. -->
+                <span class="link-block">
+                  <a href="https://arxiv.org/pdf/2406.05572" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://arxiv.org/pdf/2406.05572" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+
+                <!-- Code Link. -->
+                <span class="link-block">
+                  <a href="https://github.com/Learning-and-Intelligent-Systems/proc3s" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+
+      <div class="columns is-centered">
+
+        <div class="column">
+          <div class="hero-body">
+            <video id="exp5_ld" autoplay muted loop playsinline height="100%">
+              <source src="./static/videos/demo2.mp4" type="video/mp4">
+            </video>
+            <h2 class="subtitle has-text-centered">
+              Place 5 objects in a line
+            </h2>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="hero-body">
+            <video id="exp5_ld" autoplay muted loop playsinline height="100%">
+              <source src="./static/videos/demo3.mp4" type="video/mp4">
+            </video>
+            <h2 class="subtitle has-text-centered">
+              Place all objects into same-color bowls
+            </h2>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="hero-body">
+            <video id="exp5_ld" autoplay muted loop playsinline height="100%">
+              <source src="./static/videos/demo4.mp4" type="video/mp4">
+            </video>
+            <h2 class="subtitle has-text-centered">
+              Pack all objects within 0.1m of the table center
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Recent developments in pretrained large language models (LLMs) applied to robotics have demonstrated their capacity for sequencing a set of discrete skills to achieve open-ended goals in simple robotic tasks. In this paper, we examine the topic of LLM planning for a set of continuously parameterized skills whose execution must avoid violations of a set of kinematic, geometric, and physical constraints. We prompt the LLM to output code for a function with open parameters, which, together with environmental constraints, can be viewed as a Continuous Constraint Satisfaction Problem (CCSP). This CCSP can be solved through sampling or optimization to find a skill sequence and continuous parameter settings that achieve the goal while avoiding constraint violations. Additionally, we consider cases where the LLM proposes unsatisfiable CCSPs, such as those that are kinematically infeasible, dynamically unstable, or lead to collisions, and re-prompt the LLM to form a new CCSP accordingly. Experiments across three different simulated 3D domains demonstrate that our proposed strategy, PRoC3S, is capable of solving a wide range of complex manipulation tasks with realistic constraints on continuous parameters much more efficiently and effectively than existing baselines.
+            </p>
+          </div>
+        </div>
+      </div>
+
+  </section>
+
+
+
+  <section class="hero is-light is-small">
+    <br>
+    <br>
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">Real World Constraints</h2>
+
+      <div class="columns is-centered">
+        <!-- Create 4 coliuns for the 4 images with captions. -->
+
+        <!-- First Column. -->
+        <div class="column">
+          <div class="hero-body">
+            <img src="./static/images/t1.png" alt="Grasp Failures" width="100%">
+            <p class=" has-text-centered">
+              Grasp Failures
+            </p>
+          </div>
+        </div>
+
+        <!-- Second Column. -->
+        <div class="column">
+          <div class="hero-body">
+            <img src="./static/images/t2.png" alt="Obstacle Collisions" width="100%">
+            <p class=" has-text-centered">
+              Obstacle Collisions
+            </p>
+          </div>
+        </div>
+
+        <!-- Third Column. -->
+        <div class="column">
+          <div class="hero-body">
+            <img src="./static/images/t3.png" alt="Kinematic Infeasibility" width="100%">
+            <p class=" has-text-centered">
+              Kinematic Infeasibility
+            </p>
+          </div>
+        </div>
+
+        <!-- Fourth Column. -->
+        <div class="column">
+          <div class="hero-body">
+            <img src="./static/images/t4.png" alt="Lack of Stability" width="100%">
+            <p class=" has-text-centered">
+              Lack of Stability
+            </p>
+          </div>
+        </div>
+
+
+    </div>
+  </section>
+
+
+
+
+  <section class="hero teaser">
+    <br>
+    <br>
+    <div class="container is-max-desktop">
+      <h2 class="title is-3 has-text-centered">The PRoC3S</h2>
+
+      <!-- An image spanning the entire width of the page with a paragraph of text above it-->
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <div class="content has-text-justified">
+            <p>
+              An LLM is prompted with an example initial state, goal, LMP, and associated LMP domain for drawing a square. When prompted with a new state and goal for drawing a star, the language model outputs a new LMP and associated domain. We then sample inputs to the function and test them against a set of pre-specified constraints via a simulator. If no satisfying assignment is found after N samples, we feed back the primary failure modes to the LLM to generate an updated LMP and domain.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="columns is-centered">
+        <div class="column">
+          <div class="hero-body">
+            <img src="./static/images/new_diagram.png" alt="PRoC3S" width="100%">
+          </div>
+        </div>
+
+  </section>
+
+
+  <section class="hero is-light is-small">
+    <br>
+    <br>
+    <h2 class="title is-3 has-text-centered">Drawing Domain</h2>
+    <!-- A row of 4 videos each with a caption -->
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+
+        <div class="column">
+          <div class="hero-body">
+            <img id="exp5_ld" src="./static/images/draw_star_short.gif" alt="Drawing Star">
+            <h2 class="subtitle has-text-centered">
+              Draw a star
+            </h2>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="hero-body">
+            <img id="exp5_ld" src="./static/images/draw_enclose_short.gif" alt="Drawing Star">
+            <h2 class="subtitle has-text-centered">
+              Draw a rectangle enclosing any obstacle
+            </h2>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="hero-body">
+            <img id="exp5_ld" src="./static/images/draw_m_short.gif" alt="Drawing Star">
+            <h2 class="subtitle has-text-centered">
+              Draw the letter M
+            </h2>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="hero-body">
+            <img id="exp5_ld" src="./static/images/draw_arrow_short.gif" alt="Drawing Star">
+            <h2 class="subtitle has-text-centered">
+              Draw an arrow pointing at the largest obstacle
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <br>
+  </section>
+
+
+
+  <section class="hero is-small">
+    <br>
+    <br>
+    <h2 class="title is-3 has-text-centered">Blocks Domain</h2>
+    <!-- A row of 4 videos each with a caption -->
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+
+        <div class="column">
+          <div class="hero-body">
+            <img id="exp5_ld" src="./static/images/arrange_line_short.gif" alt="Drawing Star">
+            <h2 class="subtitle has-text-centered">
+              Place 5 objects in a line
+            </h2>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="hero-body">
+            <img id="exp5_ld" src="./static/images/packing_short.gif" alt="Drawing Star">
+            <h2 class="subtitle has-text-centered">
+              Pack all objects into the region
+            </h2>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="hero-body">
+            <img id="exp5_ld" src="./static/images/stack_pyramid_short.gif" alt="Drawing Star">
+            <h2 class="subtitle has-text-centered">
+              Stack a pyramid of blocks
+            </h2>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="hero-body">
+            <img id="exp5_ld" src="./static/images/unstack_short.gif" alt="Drawing Star">
+            <h2 class="subtitle has-text-centered">
+              Place a green block in a green bowl
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <br>
+  </section>
+
+
+
+
+  <section class="hero is-light is-small">
+    <br>
+    <br>
+    <h2 class="title is-3 has-text-centered">YCB Domain</h2>
+    <!-- A row of 4 videos each with a caption -->
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+
+        <div class="column">
+          <div class="hero-body">
+            
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="hero-body">
+            <img id="exp5_ld" src="./static/images/stack_ycb_short.gif" alt="Drawing Star">
+            <h2 class="subtitle has-text-centered">
+              Place 5 objects in a line
+            </h2>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="hero-body">
+            <img id="exp5_ld" src="./static/images/packing_ycb_short.gif" alt="Drawing Star">
+            <h2 class="subtitle has-text-centered">
+              Stack any two objects
+            </h2>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="hero-body">
+            
+          </div>
+        </div>
+
+       
+      </div>
+    </div>
+
+    <br>
+    <br>
+  </section>
+
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>
+@misc{curtis2024trustproc3ssolvinglonghorizon,
+      title={Trust the PRoC3S: Solving Long-Horizon Robotics Problems with LLMs and Constraint Satisfaction}, 
+      author={Aidan Curtis and Nishanth Kumar and Jing Cao and Tomás Lozano-Pérez and Leslie Pack Kaelbling},
+      year={2024},
+      eprint={2406.05572},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO},
+      url={https://arxiv.org/abs/2406.05572}, 
+}</code></pre>
+    </div>
+  </section>
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <div class="content">
+
+          The template for this website can be found <a href="https://github.com/nerfies/nerfies.github.io">here</a>
+
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+
+</html>
